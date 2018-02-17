@@ -16,15 +16,22 @@
         </li>
       </ul>
       <ul class="navbar-nav mr-auto navbar-right">
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">logout</a>
-        </li>
+        
+        {% if session.logged_in %}
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
