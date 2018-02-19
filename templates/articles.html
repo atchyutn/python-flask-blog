@@ -3,6 +3,7 @@
 {% block body %}
 
     <h1>Articles</h1>
+    <a href="/add_article" class="btn btn-success">Add Article</a>
     <ul class="list-group">
         {% for article in articles %}
             <li class="list-group-item"><a href="articles/{{article.id}}">{{article.title}}</a></li>
