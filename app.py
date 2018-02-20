@@ -6,7 +6,7 @@ Created on Fri Feb 16 13:04:42 2018
 """
 
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
-from data import Articles
+#from data import Articles
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
@@ -25,7 +25,8 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 #init MYSQL
 mysql = MySQL(app)
 
-Articles = Articles()
+#Get articles seed data from data file
+#Articles = Articles()
 
 #logic for login required
 def login_required(f):
@@ -164,12 +165,39 @@ def add_article():
 #Route for articles index
 @app.route('/articles')
 def articles():
-    return render_template('articles.html', articles = Articles)
+
+    #create cursor
+    cur = mysql.connection.cursor()
+
+    #execute query for articles
+    result = cur.execute("SELECT * FROM articles")
+
+    if result > 0:
+        articles = cur.fetchall()
+        return render_template('articles.html', articles=articles)
+
+        #close connection        
+        cur.close()
+    else:
+        flash('No articles found', 'warning')
+        return render_template('articles.html')
 
 #Route for article show page
 @app.route('/articles/<string:id>/')
 def article(id):
-    return render_template('article.html', id=id)
+
+    #create cursor
+    cur = mysql.connection.cursor()
+
+    #execute for single article
+    result = cur.execute("SELECT * FROM articles WHERE id=%s", [id])
+
+    article = cur.fetchone()
+
+    return render_template('article.html', article=article)
+
+    #close connecction
+    cur.close()
 
 #routes for dashboard
 @app.route('/dashboard')
@@ -189,6 +217,7 @@ def dashboard():
         #close connection
         cur.close()
     else:
+        flash('No articles found', 'warning')
         return render_template('dashboard.html')
 
 if __name__ == "__main__":

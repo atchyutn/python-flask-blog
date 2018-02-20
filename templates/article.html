@@ -2,6 +2,9 @@
 
 {% block body %}
 
-{{id}}
+<h1>{{article.title}}</h1>
+<small>Created By <b>{{article.author}}</b> on {{article.created_date}}</small>
+<hr>
+<p>{{article.body}}</p>
 
 {% endblock %}
