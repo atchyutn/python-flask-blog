@@ -141,8 +141,8 @@ class ArticlesForm(Form):
 def add_article():
     form = ArticlesForm(request.form)
     if request.method == 'POST' and form.validate():
-        title = form.title
-        body = form.body
+        title = form.title.data
+        body = form.body.data
         #create cursor
         cur = mysql.connection.cursor()
 
@@ -175,7 +175,21 @@ def article(id):
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+
+    #create cursor
+    cur = mysql.connection.cursor()
+
+    #Execute to get articles
+    result = cur.execute("SELECT * FROM articles")
+
+    if result > 0:
+        articles =cur.fetchall()
+        return render_template('dashboard.html', articles=articles)
+
+        #close connection
+        cur.close()
+    else:
+        return render_template('dashboard.html')
 
 if __name__ == "__main__":
     app.secret_key = 'secret123'
